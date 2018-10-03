@@ -78,3 +78,9 @@ BOT_RASA_PROJECT=current
 These options can also be given as CLI args like `--rasa-url localhost:5000` or
 as attributes in `package.json` under `"bot"` like `"rasa-project": "current"`.
 
+## Contributing
+
+This adapter is functional but only provides MVP utility and needs to be matured
+with more "real world" experience. If you're using Rasa in production with more
+advanced requirements, like custom extractors and actions, please report an
+issue to describe your usage and requirements, so we might improve it together.

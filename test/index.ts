@@ -4,9 +4,9 @@ import * as rasa from '../src'
 bot.adapters.nlu = rasa.use(bot)
 
 bot.global.NLU(
-  { intent: { is: 'greet' } },
+  { intent: { name: 'greet', operator: 'max' } },
   (b) => b.respond('👋'),
-  { id: 'greeting', force: true }
+  { id: 'greeting' }
 )
 
 bot.start()

@@ -1,5 +1,19 @@
 import * as bBot from 'bbot'
 
+export interface IIntent {
+  confidence: number
+  name: string
+}
+
+export interface IParsedResult {
+  project: string
+  entities: any[]
+  intent: IIntent
+  text: string
+  model: string
+  intent_ranking: IIntent[]
+}
+
 /** Rasa NLU adapter, parses messages for intent, entities, actions */
 export class Rasa extends bBot.NLUAdapter {
   /** Name of adapter, used for logs */
@@ -38,18 +52,34 @@ export class Rasa extends bBot.NLUAdapter {
   async shutdown() {}
   
   /** Get NLU result from Rasa API parse endpoint  */
-  async parse (q: string) {
+  async parse (q: string): Promise<IParsedResult> {
     const url = `${this.bot.settings.get('rasa-url')}/parse`
     const project = this.bot.settings.get('rasa-project')
-    const parsed = await this.bot.request.post(url, { q, project })
-    return parsed
+    return this.bot.request.post(url, { q, project })
   }
 
   async process (message: bBot.TextMessage) {
     try {
       const parsed = await this.parse(message.toString())
-      this.bot.logger.warn(`[rasa] parse response: ${JSON.stringify(parsed)}`)
       const results: bBot.NaturalLanguageResultsRaw = {}
+      if (parsed.intent) {
+        results.intent = []
+        for (let intent of parsed.intent_ranking) {
+          results.intent.push(this.parseSchema(intent, {
+            score: 'confidence'
+          }, intent))
+        }
+      }
+      if (Array.isArray(parsed.entities)) {
+        results.entities = []
+        for (let entity of parsed.entities) {
+          results.entities.push(this.parseSchema(entity, {
+            name: 'value',
+            id: 'entity'
+          }, entity))
+        }
+      }
+      this.bot.logger.debug(`[rasa] NLU results: ${JSON.stringify(results)}`)
       return results
     } catch (err) {
       this.bot.logger.error(`[rasa] ${err.message}`)
