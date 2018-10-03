@@ -2,7 +2,7 @@
 
 # bBot Rasa.ai NLU adapter
 
-[![npm version](https://img.shields.io/npm/v/bbot-watson-tone-nlu.svg?style=flat)](https://www.npmjs.com/package/bbot-rasa-nlu)
+[![npm version](https://img.shields.io/npm/v/bbot-rasa-nlu.svg?style=flat)](https://www.npmjs.com/package/bbot-rasa-nlu)
 
 NLU adapter for analysing bBot messages with Rasa.ai.
 
@@ -41,7 +41,7 @@ yarn rasa:train
 Run the NLU server:
 
 ```
-yarn rasa:nlu
+yarn rasa:run
 ```
 
 You can now make HTTP requests to your local server:
@@ -50,6 +50,7 @@ You can now make HTTP requests to your local server:
 curl XPOST localhost:5000/parse -d '{"query":"Hello", "project": "current"}'
 ```
 
+<!--
 ### High Level Architecture
 
 When incoming messages are processed, if it isn't handled by basic text pattern
@@ -61,6 +62,7 @@ other details
 This is the process 
 
 [![architecture](https://rasa.com/docs/core/_images/rasa_arch_colour.png)]
+-->
 
 ### Configuring the bot
 
